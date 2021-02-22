@@ -1,0 +1,74 @@
+mixin tag(name)
+    span.badge.badge-secondary(style='cursor: pointer;' onclick!=`window.location='/list?search=${name.trim().split(' ').join('_')}'`) #{name}
+
+mixin author(name)
+    span.badge.badge-primary(style="cursor: pointer;" onclick=`window.location='/author?name=${name.trim().split(' ').join('_')}'`) #{name}
+
+mixin page(high, low, desc)
+    img(src=low hq-src=high alt=desc)/
+
+doctype html
+html(lang="en")
+    head
+        title MP - #{title}
+        script(src='https://code.jquery.com/jquery-3.4.1.slim.min.js')
+        script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js')
+        script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js')
+        link(rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Galada&display=swap')
+        link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css')
+        style.
+            body {
+                font-family: 'Galada', cursive;
+            }
+            ::-webkit-scrollbar {
+                display: none;
+            }
+            * {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            header div {
+                text-align: center;
+                padding-top: 3%;
+                padding-bottom: 2%;
+            }
+            h1 {
+                font-size: 600%;
+            }
+            h2 {
+                font-size: 300%;
+                margin-bottom: 0px;
+            }
+            img {
+                width: 100%;
+            }
+            .badge {
+                font-weight: 200;
+                padding-top: 0.4em;
+                margin: 1px;
+            }
+    body(style='text-align: center;')
+        header
+            div
+                h1
+                    a(href="/" style="text-decoration: none; color: black;") My-Porn.net
+                h2 #{title}
+                each author in authors
+                    +author(author)
+                each tag in tags
+                    +tag(tag)
+        div
+            each page in pages
+                +page(page['high-quality'], page['low-quality'], '')
+        script.
+            $(document).ready(() => {
+                $('body > div img').each(function () {
+                    $(this).ready(() => {
+                        const img = new Image()
+                        img.src = $(this).attr('hq-src')
+                        $(img).on('load', () =>
+                            $(this).attr('src', $(this).attr('hq-src'))
+                        )
+                    })
+                })
+            })
