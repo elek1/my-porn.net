@@ -1,0 +1,23 @@
+{
+  "name": "my-porn.net",
+  "version": "1.0.0",
+  "description": "A porn website that hosts my porn >.>",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elek1/my-porn.net.git"
+  },
+  "author": "Elek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elek1/my-porn.net/issues"
+  },
+  "homepage": "https://github.com/elek1/my-porn.net#readme"
+}
