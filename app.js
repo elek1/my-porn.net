@@ -1,6 +1,6 @@
 const ex = require('express')
 const app = ex()
 
-app.get('/', (req, res) => res.send('test'))
+app.use('/', require('./routes/index.js'))
 
 app.listen(3000)
