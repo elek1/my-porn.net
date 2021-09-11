@@ -1,9 +1,9 @@
-mixin panel(id, coverImage, title)
+mixin panel(id, coverImage, title, tags)
     .col
         .ucard(onclick="window.location='/comic?id=1762'" style="--image: url("+coverImage+");")
             .content
                 h2.title #{title}
-                p.copy Tag1, Tag2, Tag3
+                p.copy #{tags.join(", ")}
 
 doctype html
 head
@@ -290,4 +290,5 @@ header
         })
 .container
     .row
-        +panel(1, "https://static1.e621.net/data/sample/4f/60/4f6010514f4a7ff596d83934bc49eab9.jpg", "Test")
+        each comic in comics
+            +panel(comic.id, comic.cover, comic.title, comic.tags)
