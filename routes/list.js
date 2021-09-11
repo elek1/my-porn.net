@@ -22,9 +22,8 @@ router.get('/', async (req, res) => {
         filters.search = []
         search.split(' ').forEach((val) => filters.search.push(val.replace('_', ' ')))
     }
-    res.send(pug.renderFile('views/list.pug'))
-
-    //res.send(await db.getComics(count, page, filters))
+    
+    res.send(pug.renderFile('views/list.pug', { comics: await db.getComics(count, page, filters) }))
 })
 
 module.exports = router
