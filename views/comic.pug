@@ -63,7 +63,7 @@ html(lang="en")
                     +tagBadge(tag)
         div
             each page in pages
-                +page(page['high-quality'], page['low-quality'], '')
+                +page(page.highquality, page.lowquality, '')
         script.
             $(document).ready(() => {
                 $('body > div img').each(function () {
