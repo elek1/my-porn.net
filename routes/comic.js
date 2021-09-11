@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const path = require('path')
 const db = require('../database')
-const fs = require('fs')
 const pug = require('pug')
 
 router.get('/', async (req, res) => {
