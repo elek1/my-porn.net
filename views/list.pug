@@ -259,36 +259,38 @@ head
             transition-duration: 0s;
         }
     }
-header
-  div
-    h1
-      a(href='/' style='text-decoration: none; color: black;') Yiff Collections
-    h2 Comic List
-    button#filtersToggle.btn.btn-outline-secondary.btn-sm(type='button') Open Filters
-    form#filters(style='margin-top:1%')
-      .form-group
-        label(for='search')
-          | Search: (
-          a(href='/help#search') ?
-          | )
-        input#search.form-control(type='text')
-      button#searchButton.btn.btn-light(style='width: 100%; height:5%' type='button') Search
-    script.
-        $(document).ready(() => {
-            $('#filters').hide()
-            $('#filtersToggle').click(() => {
-                if($('#filters').is(":visible"))
+body
+    header
+        div
+            h1
+                a(href="/" style="text-decoration: none; color: black;") My-Porn.net
+            h2 Comic List
+            button#filtersToggle.btn.btn-outline-secondary.btn-sm(type='button') Open Filters
+            form#filters(style='margin-top:1%')
+                .form-group
+                    label(for='search')
+                        | Search: (
+                        a(href='/help#search') ?
+                        | )
+                    input#search.form-control(type='text')
+                button#searchButton.btn.btn-light(style='width: 100%; height:5%' type='button') Search
+            script.
+                $(document).ready(() => {
                     $('#filters').hide()
-                else
-                    $('#filters').show()
-            })
-            $('#search').val('${search}')
-            $('#searchButton').click(() => {
-                const searchText = $('#search').val()
-                window.location = 'list?search='+searchText
-            })
-        })
-.container
-    .row
-        each comic in comics
-            +panel(comic.id, comic.cover, comic.title, comic.tags)
+                    $('#filtersToggle').click(() => {
+                        if($('#filters').is(":visible"))
+                            $('#filters').hide()
+                        else
+                            $('#filters').show()
+                    })
+                    $('#search').val('#{search}')
+                    $('#searchButton').click(() => {
+                        const searchText = $('#search').val()
+                        window.location = '/list?search='+searchText
+                    })
+                })
+    div
+        .container
+            .row
+                each comic in comics
+                    +panel(comic.id, comic.cover, comic.title, comic.tags)
