@@ -1,3 +1,11 @@
+const MongoClient = require('mongodb').MongoClient
+const uri = ''
+const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+var dbConnection = client.connect()
+
 exports.getComic = (id) => {
     return new Promise((resolve, reject) => {
         resolve({
