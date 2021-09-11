@@ -16,6 +16,7 @@ router.get('/', (req, res) => {
             'test',
             'yes'
         ],
+        status: 'completed',
         pages: [
             {
                 'low-quality': 'https://static1.e621.net/data/sample/eb/d3/ebd39570b1917e10e1f6a85190215294.jpg',

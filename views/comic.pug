@@ -1,7 +1,10 @@
-mixin tag(name)
+mixin tagBadge(name)
     span.badge.badge-secondary(style='cursor: pointer;' onclick!=`window.location='/list?search=${name.trim().split(' ').join('_')}'`) #{name}
 
-mixin author(name)
+mixin statusBadge(name)
+    span.badge.bg-info.text-light #{name}
+
+mixin authorBadge(name)
     span.badge.badge-primary(style="cursor: pointer;" onclick=`window.location='/author?name=${name.trim().split(' ').join('_')}'`) #{name}
 
 mixin page(high, low, desc)
@@ -54,9 +57,10 @@ html(lang="en")
                     a(href="/" style="text-decoration: none; color: black;") My-Porn.net
                 h2 #{title}
                 each author in authors
-                    +author(author)
+                    +authorBadge(author)
+                +statusBadge(status)
                 each tag in tags
-                    +tag(tag)
+                    +tagBadge(tag)
         div
             each page in pages
                 +page(page['high-quality'], page['low-quality'], '')
