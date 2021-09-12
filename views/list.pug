@@ -282,8 +282,8 @@ body
                                 span.input-group-text @
                                 input#author.form-control(list='authorOptions' placeholder='Type to search author...')
                                 datalist#authorOptions
-                                    option(value='author1')
-                                    option(value='author2')
+                                    each author in possibleAuthors
+                                        option(value=author)
                     .row(style='margin-top:1%')
                         .col-sm-4
                             .input-group
