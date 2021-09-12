@@ -24,37 +24,52 @@ exports.getComic = (id) => {
     })
 }
 
-exports.getComics = (count, page, filters) => {
+exports.getComics = (title, tags, author, sort, count, allowOngoing) => {
     return new Promise((resolve, reject) => {
         const query = {}
-        if (filters.hasOwnProperty('search')) {
-            query.$or = []
-            filters.search.forEach((term) => {
-                query.$or.push({ tags: { $regex: `.*${term}.*`, $options: 'i' } })
-                query.$or.push({ author: { $regex: `.*${term}.*`, $options: 'i' } })
-                query.$or.push({ title: { $regex: `.*${term}.*`, $options: 'i' } })
+        if (title || author || tags.length != 0) {
+            query.$and = []
+
+            if(title) query.$and.push({ title: { $regex: `.*${title}.*`, $options: 'i' } })
+            if(author) query.$and.push({ author: { $regex: `.*${author}.*`, $options: 'i' } }) // TODO change to authors
+
+            tags.forEach((term) => {
+                query.$and.push({ tags: { $regex: `.*${term}.*`, $options: 'i' } })
             })
         }
-        switch (filters.sort) {
+        switch (sort) {
             case 'tasc':
-                filters.sort = { title: 1 }
+                sort = { title: 1 }
                 break
             case 'tdesc':
-                filters.sort = { title: -1 }
+                sort = { title: -1 }
                 break
             default:
-                filters.sort = { title: 1 }
+                sort = { title: 1 }
                 break
         }
         dbConnection.then((db) => {
             db.db('YiffCollections')
                 .collection('comic')
                 .find(query)
-                .sort(filters.sort)
-                .limit(page * count)
+                .sort(sort)
+                .limit(/*page*/1 * count)
                 .toArray((err, result) => {
                     if (err) throw err
-                    resolve(result.splice((page - 1) * count, page * count))
+                    resolve(result.splice((/*page*/1 - 1) * count, /*page*/1 * count))
+                })
+        })
+    })
+}
+
+exports.getAuthors = () => {
+    return new Promise((resolve, reject) => {
+        dbConnection.then((db) => {
+            db.db('YiffCollections')
+                .collection('comic')
+                .distinct('author') // TODO change to authors
+                .then((result) => {
+                    resolve(result)
                 })
         })
     })
