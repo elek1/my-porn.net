@@ -273,14 +273,19 @@ body
                         | )
                 form
                     .row.gy-2.gx-3.align-items-center(style='margin-top:1px')
+                        .col-sm-12
+                            .input-group
+                                span.input-group-text title
+                                input.form-control#title(type='text' placeholder='Weekend 2' value=search.title)
+                    .row.gy-2.gx-3.align-items-center(style='margin-top:1px')
                         .col-sm-7
                             .input-group
                                 span.input-group-text tags
-                                input.form-control#autoSizingInput(type='text', placeholder='gay double_penetration ...')
+                                input.form-control#tags(type='text' placeholder='gay double_penetration ...' value=search.tags.join(' '))
                         .col-sm-5
                             .input-group
                                 span.input-group-text @
-                                input#author.form-control(list='authorOptions' placeholder='Type to search author...')
+                                input#author.form-control(list='authorOptions' placeholder='Type to search author...' value=search.author)
                                 datalist#authorOptions
                                     each author in possibleAuthors
                                         option(value=author)
@@ -288,7 +293,7 @@ body
                         .col-sm-4
                             .input-group
                                 span.input-group-text @
-                                select#count.form-select.form-control
+                                select#sort.form-select.form-control
                                     option(value='tasc' selected) Title Ascending
                                     option(value='tdesc') Title Descending
                         .col-sm-3
@@ -299,23 +304,44 @@ body
                                 option(value='48') 48
                         .col-sm-auto
                             .form-check(style='margin-top: 5%;')
-                                input.form-check-input#autoSizingCheck(type='checkbox' checked)
-                                label.form-check-label(for='autoSizingCheck') Allow Ongoing
+                                input.form-check-input#allowOngoing(type='checkbox' checked=search.allowOngoing)
+                                label.form-check-label(for='allowOngoing') Allow Ongoing
                     .row
                         button#searchButton.btn.btn-light(style='width: 100%; height:5%; margin-top:1%;' type='button') Search
             script.
                 $(document).ready(() => {
                     $('#filters').hide()
                     $('#filtersToggle').click(() => {
-                        if($('#filters').is(":visible"))
+                        if($('#filters').is(":visible")){
+                            $('#filtersToggle').html('Open Filters')
                             $('#filters').hide()
-                        else
+                        } else {
+                            $('#filtersToggle').html('Close Filters')
                             $('#filters').show()
+                        }
                     })
-                    $('#search').val('#{search}')
+
+                    $('#sort').val('#{search.sort}')
+                    if('#{search.count}' != '12')
+                        $('#count').val('#{search.count}')
+
                     $('#searchButton').click(() => {
-                        const searchText = $('#search').val()
-                        window.location = '/list?search='+searchText
+                        const title = $('#title').val().trim()
+                        const tags = $('#tags').val().trim()
+                        const author = $('#author').val().trim()
+                        const sort = $('#sort').val().trim()
+                        const count = $('#count').val().trim()
+                        const allowOngoing = $('#allowOngoing').is(':checked')
+
+                        let link = '/list?'
+                        link += title ? `title=${title}&` : ''
+                        link += tags ? `tags=${tags}&` : ''
+                        link += author ? `author=${author}&` : ''
+                        link += sort && sort != 'tasc' ? `sort=${sort}&` : ''
+                        link += count && !isNaN(+count) && isFinite(+count) ? `count=${count}&` : ''
+                        link += allowOngoing ? '' : `allowOngoing=${allowOngoing}&`
+
+                        window.location = link.substring(0, link.length-1)
                     })
                 })
     div
