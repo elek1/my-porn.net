@@ -24,19 +24,9 @@ exports.getComic = (id) => {
     })
 }
 
-exports.getComics = (title, tags, author, sort, count, allowOngoing) => {
-    return new Promise((resolve, reject) => {
-        const query = {}
-        if (title || author || tags.length != 0) {
-            query.$and = []
-
-            if(title) query.$and.push({ title: { $regex: `.*${title}.*`, $options: 'i' } })
-            if(author) query.$and.push({ author: { $regex: `.*${author}.*`, $options: 'i' } }) // TODO change to authors
-
-            tags.forEach((term) => {
-                query.$and.push({ tags: { $regex: `.*${term}.*`, $options: 'i' } })
-            })
-        }
+exports.getComics = (title, tags, author, allowOngoing, sort, count, page) => {
+    return new Promise(async (resolve, reject) => {
+        const query = await this.genQuery(title, tags, author, allowOngoing)
         switch (sort) {
             case 'tasc':
                 sort = { title: 1 }
@@ -53,12 +43,41 @@ exports.getComics = (title, tags, author, sort, count, allowOngoing) => {
                 .collection('comic')
                 .find(query)
                 .sort(sort)
-                .limit(/*page*/1 * count)
+                .limit(page * count)
                 .toArray((err, result) => {
                     if (err) throw err
-                    resolve(result.splice((/*page*/1 - 1) * count, /*page*/1 * count))
+                    resolve(result.splice((page - 1) * count, page * count))
                 })
         })
+    })
+}
+
+exports.getPageCount = (title, tags, author, allowOngoing) => {
+    return new Promise(async (resolve, reject) => {
+        const query = await this.genQuery(title, tags, author, allowOngoing)
+        dbConnection.then(async (db) => {
+            resolve(await db.db('YiffCollections')
+                .collection('comic')
+                .find(query)
+                .count())
+        })
+    })
+}
+
+exports.genQuery = (title, tags, author, allowOngoing) => {
+    return new Promise((resolve, reject) => {
+        const query = {}
+        if (title || author || tags.length != 0) {
+            query.$and = []
+
+            if(title) query.$and.push({ title: { $regex: `.*${title}.*`, $options: 'i' } })
+            if(author) query.$and.push({ author: { $regex: `.*${author}.*`, $options: 'i' } }) // TODO change to authors
+
+            tags.forEach((term) => {
+                query.$and.push({ tags: { $regex: `.*${term}.*`, $options: 'i' } })
+            })
+        }
+        resolve(query)
     })
 }
 
