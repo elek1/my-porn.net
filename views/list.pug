@@ -343,9 +343,33 @@ body
 
                         window.location = link.substring(0, link.length-1)
                     })
+
+                    $('#nextButton').click(() => {
+                        let param = new URLSearchParams(window.location.search)
+                        param.set("page", param.get('page') ? +param.get('page')+1 : 2)
+                        window.location.search = "?" + param.toString()
+                    })
+
+                    $('#previousButton').click(() => {
+                        let param = new URLSearchParams(window.location.search)
+                        if(param.get('page') <= 2)
+                            param.delete('page')
+                        else
+                            param.set("page", +param.get('page')-1)
+                        window.location.search = "?" + param.toString()
+                    })
                 })
     div
         .container
             .row
                 each comic in comics
                     +panel(comic.id, comic.cover, comic.title, comic.tags)
+
+    nav(aria-label='Page navigation')
+        ul.pagination
+            li#previousButton.page-item(class=(page < 2 ? "disabled" : ""))
+                a.page-link(aria-label='Previous')
+                    span(aria-hidden='true') &laquo;
+            li#nextButton.page-item(class=(page >= maxPage ? "disabled" : ""))
+                a.page-link(aria-label='Next')
+                    span(aria-hidden='true') &raquo;

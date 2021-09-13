@@ -5,7 +5,7 @@ const pug = require('pug')
 
 router.get('/', async (req, res) => {
     // Getting URL parameters
-    const page = isNaN(req.query.page) ? 1 : +req.query.page // TODO page
+    const page = isNaN(req.query.page) ? 1 : (+req.query.page < 1 ? 1 : Math.floor(+req.query.page)) // TODO page
     const title = typeof req.query.title == 'undefined' ? '' : req.query.title
     const tags = typeof req.query.tags == 'undefined' ? [] : req.query.tags.split(' ')
     const author = typeof req.query.author == 'undefined' ? '' : req.query.author
@@ -19,6 +19,8 @@ router.get('/', async (req, res) => {
     
     res.send(pug.renderFile('views/list.pug', {
         possibleAuthors: await db.getAuthors(),
+        page: page,
+        maxPage: (await db.getPageCount(title, tags, author, allowOngoing))/count,
         search: {
             title: title,
             tags: tags,
@@ -27,7 +29,7 @@ router.get('/', async (req, res) => {
             count: count,
             allowOngoing: allowOngoing
         },
-        comics: await db.getComics(title, tags, author, sort, count, allowOngoing)//count, page, filters) 
+        comics: await db.getComics(title, tags, author, allowOngoing, sort, count, page)//count, page, filters) 
     }))
 })
 
