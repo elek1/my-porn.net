@@ -116,6 +116,64 @@ function getInfo(url) {
                 resolve(returnJSON)
                 
                 break;
+            case 'https://hdporncomics.com':
+                var browser = await puppeteer.launch();
+                var page = await browser.newPage();
+                await page.goto(url);
+
+                setTimeout(async () => {
+                    const json = HTMLParser.parse(await page.content())
+                    await browser.close();
+
+                    var scrolls = json.querySelector('div#infoBox')
+
+                    scrolls.childNodes.forEach(scroll => {
+                        if(scroll.querySelector('span').innerText.startsWith("Artist")){
+                            scroll.querySelector('.scrollTaxonomy').childNodes.forEach(val => {
+                                let author = val.innerText.trim().toLowerCase()
+                                if(author)
+                                    returnJSON.author.push(author) // TODO change to authors
+                            })
+                        } else if(scroll.querySelector('span').innerText.startsWith("Tags")){
+                            scroll.querySelector('.scrollTaxonomy').childNodes.forEach(val => {
+                                switch (val.innerText.trim()) {
+                                    case "Furry Porn Comics and Furries Comics":
+                                    case "Most Popular":
+                                    case "":
+                                        break;
+                                    case "Gay &amp; Yaoi":
+                                        returnJSON.tags.push("gay")
+                                        break;
+                                    case "Lesbian &amp; Yuri &amp; Girls Only":
+                                        returnJSON.tags.push("lesbian")
+                                        break;
+                                    case "Straight Sex":
+                                        returnJSON.tags.push("straight")
+                                        break;
+                                    default:
+                                        if(!val.innerText.includes("Parody:"))
+                                            returnJSON.tags.push(val.innerText.toLowerCase().trim())
+                                        break;
+                                }
+                            })
+                        }
+                    })
+        
+                    json.querySelector('.my-gallery').childNodes.forEach(val => {
+                        returnJSON.pages.push({
+                            hq: val.querySelector('a').getAttribute('href'),
+                            lq: val.querySelector('img').getAttribute('src')
+                        })
+                    })
+
+                    returnJSON.source = 'hdporncomics.com'
+                    returnJSON.title = json.querySelector('h1').innerText.trim()
+                    returnJSON.cover = returnJSON.pages[0].hq
+
+                    resolve(returnJSON)
+                }, 1000)
+
+                break;
             default:
                 reject()
                 return
