@@ -10,6 +10,21 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+    
+    //res.sendStatus(201) // Success
+    //res.sendStatus(500) // Internal Server Error
+    //res.sendStatus(400) // Bad Request
+
+    console.log(req.body)
+
+    const comic = await getInfo(req.body.url)
+    comic.next = null
+    comic.previous = null
+    comic.ongoing = req.body.ongoing
+
+    db.addComic(comic)
+
+    res.sendStatus(201)
 })
 
 function getInfo(url) {
