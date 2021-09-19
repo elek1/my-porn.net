@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
     const comic = await getInfo(req.body.url)
     comic.next = null
     comic.previous = null
-    comic.ongoing = req.body.ongoing
+    comic.ongoing = req.body.status
 
     db.addComic(comic)
 
