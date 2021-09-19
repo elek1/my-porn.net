@@ -9,5 +9,6 @@ app.use('/', require('./routes/index.js'))
 app.use('/list', require('./routes/list'))
 app.use('/comic', require('./routes/comic'))
 app.use('/about', require('./routes/about'))
+app.use('/import', require('./routes/import'))
 
 app.listen(3000)
