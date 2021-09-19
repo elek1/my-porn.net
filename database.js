@@ -34,6 +34,12 @@ exports.getComics = (title, tags, author, allowOngoing, sort, count, page) => {
             case 'tdesc':
                 sort = { title: -1 }
                 break
+            case 'idasc':
+                sort = { id: 1 }
+                break
+            case 'iddesc':
+                sort = { id: -1 }
+                break
             default:
                 sort = { title: 1 }
                 break
