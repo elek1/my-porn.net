@@ -351,12 +351,16 @@ body
                     })
 
                     $('#nextButton').click(() => {
+                        if($('#nextButton').hasClass('disabled'))
+                            return
                         let param = new URLSearchParams(window.location.search)
                         param.set("page", param.get('page') ? +param.get('page')+1 : 2)
                         window.location.search = "?" + param.toString()
                     })
 
                     $('#previousButton').click(() => {
+                        if($('#previousButton').hasClass('disabled'))
+                            return
                         let param = new URLSearchParams(window.location.search)
                         if(param.get('page') <= 2)
                             param.delete('page')
