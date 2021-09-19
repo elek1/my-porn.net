@@ -19,7 +19,7 @@ exports.getComic = (id) => {
                 .findOne({ id: id }, async (err, result) => {
                     if (err) throw err
                     if (result === null) result = {}
-                    if(typeof result.ongoing == 'boolean')
+                    if(typeof result.ongoing == 'boolean') // TODO change ongoing field to status
                         result.status = result.ongoing ? 'Ongoing' : 'Completed'
                     else
                         result.status = result.ongoing
