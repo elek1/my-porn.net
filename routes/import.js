@@ -31,6 +31,22 @@ function getInfo(url) {
             }
 
             switch (url.substr(0, url.indexOf('/', 9))) {
+                case 'https://yiffer.xyz':
+                    json.querySelector('#comicKeywords').childNodes.forEach(val => returnJSON.tags.push(val.innerHTML.trim()))
+        
+                    json.querySelector('#comicPageContainer').childNodes.forEach(val => {
+                        returnJSON.pages.push({
+                            hq: val.getAttribute('src'),
+                            lq: val.getAttribute('src')
+                        })
+                    })
+
+                    returnJSON.source = 'yiffer.xyz'
+                    returnJSON.title = json.querySelector('.loadedComicHeader').innerText.trim()
+                    returnJSON.author.push(json.querySelector('.artistNameLink').innerText.toLowerCase().trim())
+                    returnJSON.cover = 'https://static.yiffer.xyz/comics' + url.substr(url.indexOf('/', 9)) + (url.endsWith('/') ? '' : '/') + 'thumbnail.jpg'
+
+                    break;
                 default:
                     reject()
                     return
