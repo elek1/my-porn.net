@@ -1,11 +1,11 @@
 mixin tagBadge(name)
-    span.badge.badge-secondary(style='cursor: pointer;' onclick!=`window.location='/list?search=${name.trim().split(' ').join('_')}'`) #{name}
+    span.badge.badge-secondary(style='cursor: pointer;' onclick!=`window.location='/list?tags=${name.trim().split(' ').join('_')}'`) #{name}
 
 mixin statusBadge(name)
     span.badge.bg-info.text-light #{name}
 
 mixin authorBadge(name)
-    span.badge.badge-primary(style="cursor: pointer;" onclick=`window.location='/author?name=${name.trim().split(' ').join('_')}'`) #{name}
+    span.badge.badge-primary(style="cursor: pointer;" onclick=`window.location='/list?author=${name.trim().split(' ').join('_')}'`) #{name}
 
 mixin page(high, low, desc)
     img(src=low hq-src=high alt=desc)/
