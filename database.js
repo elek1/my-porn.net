@@ -6,11 +6,16 @@ const client = new MongoClient(uri, {
 })
 var dbConnection = client.connect()
 
+const dbOptions = Object.freeze({
+    db: 'YiffCollections',
+    collection: 'comic'
+})
+
 exports.getComic = (id) => {
     return new Promise((resolve, reject) => {
         dbConnection.then((db) => {
-            db.db('YiffCollections')
-                .collection('comic')
+            db.db(dbOptions.db)
+                .collection(dbOptions.collection)
                 .findOne({ id: id }, async (err, result) => {
                     if (result === null) result = {}
                     result.status = result.ongoing ? 'Ongoing' : 'Completed'
@@ -45,8 +50,8 @@ exports.getComics = (title, tags, author, allowOngoing, sort, count, page) => {
                 break
         }
         dbConnection.then((db) => {
-            db.db('YiffCollections')
-                .collection('comic')
+            db.db(dbOptions.db)
+                .collection(dbOptions.collection)
                 .find(query)
                 .sort(sort)
                 .limit(page * count)
@@ -62,8 +67,8 @@ exports.getPageCount = (title, tags, author, allowOngoing) => {
     return new Promise(async (resolve, reject) => {
         const query = await this.genQuery(title, tags, author, allowOngoing)
         dbConnection.then(async (db) => {
-            resolve(await db.db('YiffCollections')
-                .collection('comic')
+            resolve(await db.db(dbOptions.db)
+                .collection(dbOptions.collection)
                 .find(query)
                 .count())
         })
@@ -90,8 +95,8 @@ exports.genQuery = (title, tags, author, allowOngoing) => {
 exports.getAuthors = () => {
     return new Promise((resolve, reject) => {
         dbConnection.then((db) => {
-            db.db('YiffCollections')
-                .collection('comic')
+            db.db(dbOptions.db)
+                .collection(dbOptions.collection)
                 .distinct('author') // TODO change to authors
                 .then((result) => {
                     resolve(result)
@@ -103,8 +108,8 @@ exports.getAuthors = () => {
 exports.addComic = (json) => {
     return new Promise((resolve, reject) => {
         dbConnection.then(db => {
-            db.db('YiffCollections')
-                .collection('comic')
+            db.db(dbOptions.db)
+                .collection(dbOptions.collection)
                 .find()
                 .sort({ id: -1 })
                 .limit(1)
