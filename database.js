@@ -93,3 +93,22 @@ exports.getAuthors = () => {
         })
     })
 }
+
+exports.addComic = (json) => {
+    return new Promise((resolve, reject) => {
+        dbConnection.then(db => {
+            db.db('YiffCollections')
+                .collection('comic')
+                .find()
+                .sort({ id: -1 })
+                .limit(1)
+                .toArray((err, result) => {
+                    if (err) throw err
+                    json.id = result[0].id+1
+                    db.db("YiffCollections").collection("comic").insertOne(json, (err, resp) => {
+                        if (err) throw err;
+                        resolve()
+                    });
+                })
+        })
+    })
