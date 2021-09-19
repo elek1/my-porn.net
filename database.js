@@ -16,7 +16,7 @@ exports.getComic = (id) => {
                     result.status = result.ongoing ? 'Ongoing' : 'Completed'
                     result.authors = result.author
 
-                    result.pages = await result.pages.map(page => {return { lowquality: page.lq, highquality: page.hq}})
+                    result.pages = await result.pages.map(page => { return { lowquality: page.lq, highquality: page.hq } })
 
                     resolve(result)
                 })
@@ -70,8 +70,8 @@ exports.genQuery = (title, tags, author, allowOngoing) => {
         if (title || author || tags.length != 0) {
             query.$and = []
 
-            if(title) query.$and.push({ title: { $regex: `.*${title}.*`, $options: 'i' } })
-            if(author) query.$and.push({ author: { $regex: `.*${author}.*`, $options: 'i' } }) // TODO change to authors
+            if (title) query.$and.push({ title: { $regex: `.*${title}.*`, $options: 'i' } })
+            if (author) query.$and.push({ author: { $regex: `.*${author}.*`, $options: 'i' } }) // TODO change to authors
 
             tags.forEach((term) => {
                 query.$and.push({ tags: { $regex: `.*${term}.*`, $options: 'i' } })
