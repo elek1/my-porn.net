@@ -69,6 +69,53 @@ function getInfo(url) {
                 }, 1000)
 
                 break;
+            case 'https://e621.net':
+                const args = url.substring(8).split('/')
+                if(args[1] != 'pools'){
+                    reject()
+                    return
+                }
+
+                var browser = await puppeteer.launch();
+                var page1 = await browser.newPage();
+                var page2 = await browser.newPage();
+
+                await page1.goto(`https://e621.net/pools/${args[2]}.json`);
+                const poolJSON = JSON.parse(HTMLParser.parse(await page1.content()).querySelector('body').innerText)
+
+                await page2.goto(`https://e621.net/posts.json?tags=pool%3A${args[2]}`);
+                const pagesJSON = JSON.parse(HTMLParser.parse(await page2.content()).querySelector('body').innerText)
+
+                returnJSON.source = 'e621'
+                returnJSON.title = poolJSON.name.replaceAll('_', ' ')
+                returnJSON.cover = pagesJSON.posts[0].sample.url
+
+                pagesJSON.posts.forEach(val => {
+                    val.tags.artist.forEach(artist => {
+                        artist = artist.replaceAll('_', ' ').toLowerCase().trim()
+                        if(!returnJSON.author.includes(artist))
+                            returnJSON.author.push(artist)
+                    })
+                    val.tags.general.forEach(tag => {
+                        tag = tag.replaceAll('_', ' ').toLowerCase().trim()
+                        if(!returnJSON.tags.includes(tag))
+                            returnJSON.tags.push(tag)
+                    })
+                    val.tags.species.forEach(tag => {
+                        tag = tag.replaceAll('_', ' ').toLowerCase().trim()
+                        if(!returnJSON.tags.includes(tag))
+                            returnJSON.tags.push(tag)
+                    })
+
+                    returnJSON.pages[poolJSON.post_ids.indexOf(val.id)] = {
+                        hq: val.file.url,
+                        lq: val.sample.url
+                    }
+                })
+
+                resolve(returnJSON)
+                
+                break;
             default:
                 reject()
                 return
