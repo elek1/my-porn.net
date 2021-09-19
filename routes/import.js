@@ -39,11 +39,11 @@ function getInfo(url) {
             tags: [],
             pages: []
         }
-        
+
         switch (url.substr(0, url.indexOf('/', 9))) {
             case 'https://yiffer.xyz':
-                const browser = await puppeteer.launch();
-                const page = await browser.newPage();
+                var browser = await puppeteer.launch();
+                var page = await browser.newPage();
                 await page.goto(url);
 
                 setTimeout(async () => {
