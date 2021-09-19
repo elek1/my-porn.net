@@ -27,7 +27,7 @@ exports.getComic = (id) => {
 exports.getComics = (title, tags, author, allowOngoing, sort, count, page) => {
     return new Promise(async (resolve, reject) => {
         const query = await this.genQuery(title, tags, author, allowOngoing)
-        switch (sort) {
+        switch (sort.toLowerCase()) {
             case 'tasc':
                 sort = { title: 1 }
                 break
