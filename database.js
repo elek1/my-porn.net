@@ -19,7 +19,10 @@ exports.getComic = (id) => {
                 .findOne({ id: id }, async (err, result) => {
                     if (err) throw err
                     if (result === null) result = {}
-                    result.status = result.ongoing ? 'Ongoing' : 'Completed'
+                    if(typeof result.ongoing == 'boolean')
+                        result.status = result.ongoing ? 'Ongoing' : 'Completed'
+                    else
+                        result.status = result.ongoing
                     result.authors = result.author
 
                     result.pages = await result.pages.map(page => { return { lowquality: page.lq, highquality: page.hq } })
