@@ -1,6 +1,6 @@
 mixin panel(id, coverImage, title, tags)
     .col
-        .ucard(onclick="window.location='/comic?id="+id+"'" style="--image: url("+coverImage.replaceAll(" ", "%20")+");")
+        .ucard(onclick="window.location='/comic?id="+id+"'" style="--image: url("+coverImage.replaceAll(" ", "%20").replaceAll("'", "\\'")+");")
             .content
                 h2.title #{title}
                 p.copy #{tags.join(", ")}
