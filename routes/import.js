@@ -37,7 +37,7 @@ function getInfo(url) {
 
             const returnJSON = {
                 source: '',
-                'source link': url,
+                'sourcelink': url,
                 author: [],
                 cover: '',
                 title: '',
