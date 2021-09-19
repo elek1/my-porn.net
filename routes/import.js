@@ -29,24 +29,27 @@ router.post('/', async (req, res) => {
 
 function getInfo(url) {
     return new Promise(async(resolve, reject) => {
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.goto(url);
-        setTimeout(async () => {
-            const json = HTMLParser.parse(await page.content())
 
-            const returnJSON = {
-                source: '',
-                'sourcelink': url,
-                author: [],
-                cover: '',
-                title: '',
-                tags: [],
-                pages: []
-            }
+        const returnJSON = {
+            source: '',
+            sourcelink: url,
+            author: [],
+            cover: '',
+            title: '',
+            tags: [],
+            pages: []
+        }
+        
+        switch (url.substr(0, url.indexOf('/', 9))) {
+            case 'https://yiffer.xyz':
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(url);
 
-            switch (url.substr(0, url.indexOf('/', 9))) {
-                case 'https://yiffer.xyz':
+                setTimeout(async () => {
+                    const json = HTMLParser.parse(await page.content())
+                    await browser.close();
+
                     json.querySelector('#comicKeywords').childNodes.forEach(val => returnJSON.tags.push(val.innerHTML.trim()))
         
                     json.querySelector('#comicPageContainer').childNodes.forEach(val => {
@@ -62,16 +65,14 @@ function getInfo(url) {
                     //returnJSON.cover = 'https://static.yiffer.xyz/comics' + url.substr(url.indexOf('/', 9)) + (url.endsWith('/') ? '' : '/') + 'thumbnail.jpg'
                     returnJSON.cover = returnJSON.pages[0].lq
 
-                    break;
-                default:
-                    reject()
-                    return
-            }
+                    resolve(returnJSON)
+                }, 1000)
 
-            resolve(returnJSON)
-
-            await browser.close();
-        }, 1000)
+                break;
+            default:
+                reject()
+                return
+        }
     })
 }
 
