@@ -17,6 +17,7 @@ exports.getComic = (id) => {
             db.db(dbOptions.db)
                 .collection(dbOptions.collection)
                 .findOne({ id: id }, async (err, result) => {
+                    if (err) throw err
                     if (result === null) result = {}
                     result.status = result.ongoing ? 'Ongoing' : 'Completed'
                     result.authors = result.author
