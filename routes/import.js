@@ -58,7 +58,7 @@ function getInfo(url) {
 
                     returnJSON.source = 'yiffer.xyz'
                     returnJSON.title = json.querySelector('.loadedComicHeader').innerText.trim()
-                    returnJSON.author.push(json.querySelector('.artistNameLink').innerText.toLowerCase().trim())
+                    returnJSON.author.push(json.querySelector('.artistNameLink').innerText.toLowerCase().trim())  // TODO change to authors
                     //returnJSON.cover = 'https://static.yiffer.xyz/comics' + url.substr(url.indexOf('/', 9)) + (url.endsWith('/') ? '' : '/') + 'thumbnail.jpg'
                     returnJSON.cover = returnJSON.pages[0].lq
 
