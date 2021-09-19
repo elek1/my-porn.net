@@ -69,6 +69,9 @@ html(lang="en")
         div
             each page in pages
                 +page(page.highquality, page.lowquality, '')
+        if(sourcelink != undefined)
+            div(style='margin:10px')
+                a(href=sourcelink style='color:black') source
         script.
             $(document).ready(() => {
                 $('body > div img').each(function () {
